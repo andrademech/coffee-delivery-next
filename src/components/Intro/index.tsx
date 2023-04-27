@@ -17,7 +17,7 @@ export function Intro() {
           <h1 className={cx(`${baloo.className} text-5xl font-bold text-left`)}>
             Encontre o café perfeito para qualquer hora do dia
           </h1>
-          <p className={cx(`${roboto.className} text-xl text-left w-full`)}>
+          <p className={cx('text-xl text-left w-full', roboto.className)}>
             Com o CoffeeDelivery você recebe o seu café onde estiver, a qualquer hora
           </p>
 

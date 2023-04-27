@@ -19,7 +19,6 @@ import ExpressoCremoso from '../../assets/coffee/expressoCremoso.svg'
 import Americano from '../../assets/coffee/americano.svg'
 import ExpressoTradicional from '../../assets/coffee/expresso.svg'
 
-import { useState } from 'react'
 import { CoffeeCard } from './components/CoffeeCard'
 
 const coffeeList = [
@@ -142,18 +141,6 @@ const coffeeList = [
 ]
 
 export function CoffeeList() {
-  const [quantity, setQuantity] = useState(1)
-
-  function handleIncrement() {
-    setQuantity(quantity + 1)
-  }
-
-  function handleDecrement() {
-    if (quantity > 1) {
-      setQuantity(quantity - 1)
-    }
-  }
-
   return (
     <section className={cx(`${roboto.className} flex flex-col justify-around max-w-[100rem] mx-auto dark:bg-neutral-900 px-52`)}>
       <h1 className={cx(`${baloo.className} mt-8 pb-16 text-4xl text-left font-bold w-full`)}>Nossos cafés</h1>
