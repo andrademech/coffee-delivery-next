@@ -20,6 +20,9 @@ import Americano from '../../assets/coffee/americano.svg'
 import ExpressoTradicional from '../../assets/coffee/expresso.svg'
 
 import { CoffeeCard } from './components/CoffeeCard'
+import { useState } from 'react'
+
+import { CartItem } from '@/contexts/CartContext'
 
 const coffeeList = [
   {
@@ -141,14 +144,82 @@ const coffeeList = [
 ]
 
 export function CoffeeList() {
+  const [coffeeQuantities, setCoffeeQuantities] = useState<number>(0)
+  const [cart, setCart] = useState<CartItem[]>([])
+
+  function handleAddToCart(product: CartItem) {
+    const productExists = cart.find((p) => p.id === product.id)
+
+    if (productExists) {
+      setCart(
+        cart.map((p) =>
+          p.id === product.id ? { ...product, quantity: p.quantity + 1 } : p
+        )
+      )
+    } else {
+      setCart([...cart, { ...product, quantity: 1 }])
+    }
+
+    setCoffeeQuantities((coffeeQuantities) => coffeeQuantities + 1)
+    console.log(`O carrinho contém ${coffeeQuantities + 1} iten(s) do produto ${product.coffeeName}`)
+  }
+
+  function handleRemoveFromCart(product: CartItem) {
+    const productExists = cart.find((p) => p.id === product.id)
+
+    if (productExists && productExists.quantity > 1) {
+      setCart(
+        cart.map((p) =>
+          p.id === product.id ? { ...product, quantity: p.quantity - 1 } : p
+        )
+      )
+    } else {
+      setCart(cart.filter((p) => p.id !== product.id))
+    }
+
+    setCoffeeQuantities((coffeeQuantities) => coffeeQuantities - 1)
+    console.log(`O carrinho contém ${coffeeQuantities - 1} iten(s) do produto ${product.coffeeName}`)
+  }
+
   return (
     <section className={cx(`${roboto.className} flex flex-col justify-around max-w-[100rem] mx-auto dark:bg-neutral-900 px-52`)}>
       <h1 className={cx(`${baloo.className} mt-8 pb-16 text-4xl text-left font-bold w-full`)}>Nossos cafés</h1>
 
       <div className={cx('grid grid-cols-4 gap-x-8 gap-y-10 pb-8')}>
-        {coffeeList.map((coffee) => (
-          <CoffeeCard key={coffee.id} {...coffee} />
-        ))}
+        {coffeeList.map(({ id, coffeeName, description, image, price, tag }) => {
+          const product = cart.find((p) => p.id === id) || { quantity: 0 }
+
+          return (
+            <CoffeeCard
+              key={id}
+              id={id}
+              coffeeName={coffeeName}
+              description={description}
+              image={image}
+              tag={tag}
+              price={price}
+              onAddToCart={() => handleAddToCart({
+                id,
+                coffeeName,
+                description,
+                image,
+                tag,
+                price,
+                quantity: 0
+              })}
+              onRemoveFromCart={() => handleRemoveFromCart({
+                id,
+                coffeeName,
+                description,
+                image,
+                tag,
+                price,
+                quantity: 0
+              })}
+              quantity={product.quantity}
+            />
+          )
+        })}
       </div>
     </section>
   )

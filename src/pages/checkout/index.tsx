@@ -12,6 +12,8 @@ import { Baloo_2, Roboto } from "next/font/google";
 import { NewCheckoutForm } from "@/components/NewCheckoutForm";
 import { SelectedCoffee } from "@/components/SelectedCoffee";
 import { StaticImageData } from "next/image";
+import { useContextSelector } from "use-context-selector";
+import { CartContext } from "@/contexts/CartContext";
 
 
 const baloo = Baloo_2({ subsets: ["latin"] });
@@ -48,6 +50,9 @@ export default function Checkout({
   tag,
   price
 }: ICoffeeListProps) {
+  const { cart } = useContextSelector(CartContext, ({ cart }) => ({
+    cart,
+  }))
 
   const newCheckoutForm = useForm<NewCheckoutFormData>({
     resolver: zodResolver(newCheckoutFormValidationSchema),
@@ -76,14 +81,24 @@ export default function Checkout({
               <NewCheckoutForm />
             </FormProvider>
           </div>
-          <SelectedCoffee
-            id={id}
-            coffeeName={coffeeName}
-            description={description}
-            image={image}
-            tag={tag}
-            price={price}
-          />
+
+          {
+            cart.map(({ id, coffeeName, description, image, tag, price }) => {
+              return (
+                <div key={id} >
+                  <SelectedCoffee
+                    id={id}
+                    coffeeName={coffeeName}
+                    description={description}
+                    image={image}
+                    tag={tag}
+                    price={price}
+                  />
+                </div>
+              )
+            }
+            )
+          }
         </form>
 
       </div>

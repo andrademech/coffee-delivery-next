@@ -17,7 +17,7 @@ interface ICoffeeListProps {
   tag: string[]
   description: string
   price: number
-}[]
+}
 
 const baloo = Baloo_2({ subsets: ["latin"] });
 
@@ -46,7 +46,7 @@ export function SelectedCoffee({
       tag,
       description,
       price,
-      quantity
+      quantity: quantity + 1
     })
   }
 
@@ -55,6 +55,18 @@ export function SelectedCoffee({
       return
     }
     setQuantity((quantity) => (quantity - 1))
+    removeProductFromCart({
+      id,
+      coffeeName,
+      image,
+      tag,
+      description,
+      price,
+      quantity: quantity - 1
+    })
+  }
+
+  function removeProduct() {
     removeProductFromCart({
       id,
       coffeeName,
@@ -114,7 +126,7 @@ export function SelectedCoffee({
                     <strong className="text-xl">{priceFormatter.format(price)}</strong>
                   </div>
 
-                  <button className="bg-yellow-600 rounded p-3 cursor-pointer">
+                  <button onClick={removeProduct} className="bg-yellow-600 rounded p-3 cursor-pointer">
                     CONFIRMAR PEDIDO
                   </button>
                 </div>

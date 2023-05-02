@@ -7,63 +7,36 @@ import { priceFormatter } from '@/utils/formatter'
 import { Minus, ShoppingCart, Plus } from 'phosphor-react'
 
 import { Baloo_2 } from 'next/font/google'
-import { useState } from 'react'
-import { useContextSelector } from 'use-context-selector'
-import { CartContext } from '@/contexts/CartContext'
+import Link from 'next/link'
+import { CartItem } from '@/contexts/CartContext'
 
 const baloo = Baloo_2({ subsets: ['latin'] })
 
-interface ICoffeeListProps {
-  id: number
-  coffeeName: string
-  image: StaticImageData
-  tag: string[]
-  description: string
-  price: number
-}[]
+interface ICoffeeListProps extends CartItem {
+  onAddToCart?: (product: CartItem) => void
+  onRemoveFromCart?: (product: CartItem) => void
+}
 
 export function CoffeeCard({
   id,
   coffeeName,
-  description,
   image,
   tag,
-  price
+  description,
+  price,
+  quantity,
+  onAddToCart,
+  onRemoveFromCart,
 }: ICoffeeListProps) {
-  const [quantity, setQuantity] = useState(0)
 
-  const { addProductToCart, removeProductFromCart } = useContextSelector(CartContext, ({ addProductToCart, removeProductFromCart }) => ({
-    addProductToCart, removeProductFromCart
-  })
-  )
-
-  function handleIncrement() {
-    setQuantity((quantity) => (quantity + 1))
-    addProductToCart({
-      id,
-      coffeeName,
-      image,
-      tag,
-      description,
-      price,
-      quantity
-    })
+  function handleAddProductToCart(product: ICoffeeListProps) {
+    if(!onAddToCart) return console.log('onAddToCart is not defined')
+    onAddToCart(product)
   }
 
-  function handleDecrement() {
-    if (quantity === 0) {
-      return
-    }
-    setQuantity((quantity) => (quantity - 1))
-    removeProductFromCart({
-      id,
-      coffeeName,
-      image,
-      tag,
-      description,
-      price,
-      quantity
-    })
+  function handleRemoveProductFromCart(product: ICoffeeListProps) {
+    if(!onRemoveFromCart) return console.log('onRemoveFromCart is not defined')
+    onRemoveFromCart(product)
   }
 
   return (
@@ -91,18 +64,36 @@ export function CoffeeCard({
 
           <div className={cx('flex items-center gap-2 justify-center')}>
             <div className={cx('flex gap-3 text-xl bg-neutral-600 rounded items-center justify-center')}>
-              <button onClick={handleDecrement} className={cx('flex items-center justify-center hover:bg-yellow-700 py-2 px-1 w-8 rounded')} >
+              <button onClick={() => handleRemoveProductFromCart({
+                id,
+                coffeeName,
+                image,
+                tag,
+                description,
+                price,
+                quantity,
+              })} className={cx('flex items-center justify-center hover:bg-yellow-700 py-2 px-1 w-8 rounded')} >
                 <Minus size={18} weight='fill' className={cx('text-yellow-950')} />
               </button>
               <span className={cx('text-base')}>
                 {quantity}
               </span>
-              <button onClick={handleIncrement} className={cx('flex items-center justify-center hover:bg-yellow-700 py-2 px-1 w-8 rounded')}>
+              <button onClick={() => handleAddProductToCart({
+                id,
+                coffeeName,
+                image,
+                tag,
+                description,
+                price,
+                quantity,
+              })} className={cx('flex items-center justify-center hover:bg-yellow-700 py-2 px-1 w-8 rounded')}>
                 <Plus size={18} weight='fill' className={cx('text-yellow-950')} />
               </button>
             </div>
             <button className={cx(' bg-yellow-500 hover:bg-yellow-400 text-yellow-950 rounded p-2')}>
-              <ShoppingCart size={18} weight='fill' />
+              <Link href='/checkout' >
+                <ShoppingCart size={18} weight='fill' />
+              </Link>
             </button>
           </div>
 

@@ -5,11 +5,9 @@ import { CoffeeList } from "@/components/CoffeeList";
 
 export default function Home(): ReactElement {
   return (
-    <>
-      <Layout>
-        <Intro />
-        <CoffeeList />
-      </Layout>
-    </>
+    <Layout>
+      <Intro />
+      <CoffeeList />
+    </Layout>
   );
 }

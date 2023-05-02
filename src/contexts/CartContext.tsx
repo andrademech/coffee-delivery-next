@@ -4,7 +4,7 @@ import { createContext } from "use-context-selector";
 
 import { StaticImageData } from "next/image";
 
-interface CartItem {
+export interface CartItem {
   id: number;
   coffeeName: string;
   image: StaticImageData;
